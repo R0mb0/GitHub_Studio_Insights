@@ -34,19 +34,13 @@ export function AppShell({
             <SidebarButton icon={<BarChart3 size={16} />} label="Traffic" active={activeTab === "traffic"} onClick={() => onTabChange("traffic")} />
             <SidebarButton icon={<FolderGit2 size={16} />} label="Repositories" active={activeTab === "repositories"} onClick={() => onTabChange("repositories")} />
           </nav>
-
-          <div className="mt-6 rounded-2xl border border-black/10 bg-zinc-100/70 p-3 text-xs text-zinc-600 dark:border-white/10 dark:bg-zinc-800/40 dark:text-zinc-300">
-            Private dashboard on Vercel.
-            <br />
-            Token is server-side only.
-          </div>
         </aside>
 
         <section className="min-w-0">
           <header className="sticky top-0 z-20 border-b border-black/10 bg-white/70 px-4 py-3 backdrop-blur dark:border-white/10 dark:bg-zinc-950/70 md:px-6">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h1 className="text-lg font-semibold">YouTube Studio-like Analytics</h1>
+                <h1 className="text-lg font-semibold">Github Studio Analytics</h1>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">Quick visibility overview across your public repositories</p>
               </div>
               <ThemeToggle />
