@@ -78,7 +78,7 @@ npm run dev
   <li>Push your code to GitHub (<code>main</code> branch).</li>
   <li>Go to <a href="https://vercel.com/new">Vercel → New Project</a>.</li>
   <li>Import <code>R0mb0/GitHub_Studio_Insights</code>.</li>
-  <li>Set the <strong>Root Directory</strong> correctly (folder containing <code>package.json</code>).</li>
+  <li>Set the <strong>Root Directory</strong> correctly (<code>github-studio-insights</code>).</li>
   <li>Add Environment Variables in Vercel Project Settings:
     <ul>
       <li><code>GITHUB_TOKEN</code> = your token</li>
