@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const username = process.env.DASHBOARD_USER ?? "";
 const password = process.env.DASHBOARD_PASS ?? "";
+const encoder = new TextEncoder();
 
 function decodeBasicAuth(value: string) {
   try {
@@ -11,14 +12,35 @@ function decodeBasicAuth(value: string) {
   }
 }
 
-export function proxy(req: NextRequest) {
+async function hashValue(value: string) {
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(value)));
+}
+
+async function safeEqual(left: string, right: string) {
+  const [leftHash, rightHash] = await Promise.all([hashValue(left), hashValue(right)]);
+  let diff = leftHash.length ^ rightHash.length;
+
+  for (let i = 0; i < Math.max(leftHash.length, rightHash.length); i += 1) {
+    diff |= (leftHash[i] ?? 0) ^ (rightHash[i] ?? 0);
+  }
+
+  return diff === 0;
+}
+
+export async function proxy(req: NextRequest) {
   const auth = req.headers.get("authorization");
 
   if (auth) {
     const [scheme, encoded] = auth.split(" ");
     if (scheme === "Basic" && encoded) {
       const [user, pass] = decodeBasicAuth(encoded).split(":");
-      if (user === username && pass === password && username && password) {
+      const isAuthorized =
+        username &&
+        password &&
+        (await safeEqual(user ?? "", username)) &&
+        (await safeEqual(pass ?? "", password));
+
+      if (isAuthorized) {
         return NextResponse.next();
       }
     }
