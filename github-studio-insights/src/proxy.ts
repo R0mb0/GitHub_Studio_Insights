@@ -20,7 +20,7 @@ async function safeEqual(left: string, right: string) {
   const [leftHash, rightHash] = await Promise.all([hashValue(left), hashValue(right)]);
   let diff = leftHash.length ^ rightHash.length;
 
-  for (let i = 0; i < Math.max(leftHash.length, rightHash.length); i += 1) {
+  for (let i = 0; i < leftHash.length; i += 1) {
     diff |= (leftHash[i] ?? 0) ^ (rightHash[i] ?? 0);
   }
 
@@ -28,17 +28,19 @@ async function safeEqual(left: string, right: string) {
 }
 
 export async function proxy(req: NextRequest) {
+  if (!username || !password) {
+    return new NextResponse("Dashboard authentication is not configured.", {
+      status: 503,
+    });
+  }
+
   const auth = req.headers.get("authorization");
 
   if (auth) {
     const [scheme, encoded] = auth.split(" ");
     if (scheme === "Basic" && encoded) {
       const [user, pass] = decodeBasicAuth(encoded).split(":");
-      const isAuthorized =
-        username &&
-        password &&
-        (await safeEqual(user ?? "", username)) &&
-        (await safeEqual(pass ?? "", password));
+      const isAuthorized = (await safeEqual(user ?? "", username)) && (await safeEqual(pass ?? "", password));
 
       if (isAuthorized) {
         return NextResponse.next();
