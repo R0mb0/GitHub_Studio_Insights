@@ -20,7 +20,7 @@ async function safeEqual(left: string, right: string) {
   const [leftHash, rightHash] = await Promise.all([hashValue(left), hashValue(right)]);
   let diff = leftHash.length ^ rightHash.length;
 
-  for (let i = 0; i < leftHash.length; i += 1) {
+  for (let i = 0; i < Math.max(leftHash.length, rightHash.length); i += 1) {
     diff |= (leftHash[i] ?? 0) ^ (rightHash[i] ?? 0);
   }
 
@@ -39,7 +39,10 @@ export async function proxy(req: NextRequest) {
   if (auth) {
     const [scheme, encoded] = auth.split(" ");
     if (scheme === "Basic" && encoded) {
-      const [user, pass] = decodeBasicAuth(encoded).split(":");
+      const decoded = decodeBasicAuth(encoded);
+      const separatorIndex = decoded.indexOf(":");
+      const user = separatorIndex >= 0 ? decoded.slice(0, separatorIndex) : decoded;
+      const pass = separatorIndex >= 0 ? decoded.slice(separatorIndex + 1) : "";
       const isAuthorized = (await safeEqual(user ?? "", username)) && (await safeEqual(pass ?? "", password));
 
       if (isAuthorized) {

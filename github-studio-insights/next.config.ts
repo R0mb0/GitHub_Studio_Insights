@@ -4,6 +4,9 @@ const isProduction = process.env.NODE_ENV === "production";
 const scriptSrc = isProduction
   ? "script-src 'self' 'unsafe-inline'"
   : "script-src 'self' 'unsafe-inline' 'unsafe-eval'";
+const connectSrc = isProduction
+  ? "connect-src 'self' https://api.github.com"
+  : "connect-src 'self' https://api.github.com ws://localhost:* ws://127.0.0.1:*";
 
 const nextConfig: NextConfig = {
   async headers() {
@@ -23,7 +26,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://api.github.com ws: wss:",
+              connectSrc,
               "frame-ancestors 'none'",
             ].join("; "),
           },
