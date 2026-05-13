@@ -7,7 +7,7 @@ Track your 14-day visibility (views, unique visitors, clones), discover top-perf
 </p>
 
 <div align="center">
-  <a href="http://paypal.me/R0mb0">
+  <a href="https://paypal.me/R0mb0">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Dark.svg">
       <source media="(prefers-color-scheme: light)" srcset="https://github.com/R0mb0/Support_the_dev_badge/blob/main/Badge/SVG/Support_the_dev_badge_Light.svg">
@@ -22,7 +22,7 @@ Track your 14-day visibility (views, unique visitors, clones), discover top-perf
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/R0mb0/GitHub_Studio_Insights)
 [![Open Source Love svg3](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://github.com/R0mb0/GitHub_Studio_Insights)
 [![MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit)
-[![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-blue.svg)](http://paypal.me/R0mb0)
+[![Donate](https://img.shields.io/badge/PayPal-Donate%20to%20Author-blue.svg)](https://paypal.me/R0mb0)
 
 </div>
 
@@ -75,8 +75,10 @@ npm install
 
 ```bash
 # .env.local
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxx
+GITHUB_TOKEN=<your_fine-grained_pat_with_repo_traffic_read_scope>
 GITHUB_USERNAME=your github name
+DASHBOARD_USER=your_username_here
+DASHBOARD_PASS=your_strong_password_here
 ```
 
 <ol start="3">
@@ -97,8 +99,10 @@ npm run dev
   <li>Set the <strong>Root Directory</strong> correctly (<code>github-studio-insights</code>).</li>
   <li>Add Environment Variables in Vercel Project Settings:
     <ul>
-      <li><code>GITHUB_TOKEN</code> = your token</li>
+      <li><code>GITHUB_TOKEN</code> = a fine-grained PAT with read-only <code>repo</code> traffic scope; rotate regularly</li>
       <li><code>GITHUB_USERNAME</code> = <code>your github name</code></li>
+      <li><code>DASHBOARD_USER</code> = <code>your dashboard username</code></li>
+      <li><code>DASHBOARD_PASS</code> = <code>your strong dashboard password</code></li>
     </ul>
   </li>
   <li>Deploy.</li>

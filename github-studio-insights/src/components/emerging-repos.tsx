@@ -13,7 +13,7 @@ export function EmergingRepos({ rows }: { rows: Row[] }) {
       <ul className="space-y-2">
         {rows.map((r) => (
           <li key={r.name} className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2">
-            <a href={r.url} target="_blank" className="truncate hover:underline">
+            <a href={r.url} target="_blank" rel="noopener noreferrer" className="truncate hover:underline">
               {r.name}
             </a>
             <span className="text-xs text-zinc-400">
