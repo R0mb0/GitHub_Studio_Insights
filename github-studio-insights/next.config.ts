@@ -6,7 +6,7 @@ const scriptSrc = isProduction
   : "script-src 'self' 'unsafe-inline' 'unsafe-eval'";
 const connectSrc = isProduction
   ? "connect-src 'self' https://api.github.com"
-  : "connect-src 'self' https://api.github.com ws://localhost:* ws://127.0.0.1:*";
+  : "connect-src 'self' https://api.github.com ws://localhost:3000 ws://127.0.0.1:3000";
 
 const nextConfig: NextConfig = {
   async headers() {

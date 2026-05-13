@@ -48,8 +48,8 @@ export async function proxy(req: NextRequest) {
         });
       }
 
-      const user = separatorIndex >= 0 ? decoded.slice(0, separatorIndex) : decoded;
-      const pass = separatorIndex >= 0 ? decoded.slice(separatorIndex + 1) : "";
+      const user = decoded.slice(0, separatorIndex);
+      const pass = decoded.slice(separatorIndex + 1);
       const [isUserMatch, isPasswordMatch] = await Promise.all([
         safeEqual(user, username),
         safeEqual(pass, password),
