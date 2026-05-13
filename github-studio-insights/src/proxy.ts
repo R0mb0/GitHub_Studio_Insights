@@ -4,6 +4,10 @@ const username = process.env.DASHBOARD_USER ?? "";
 const password = process.env.DASHBOARD_PASS ?? "";
 const encoder = new TextEncoder();
 
+if (!username || !password) {
+  throw new Error("Missing DASHBOARD_USER or DASHBOARD_PASS");
+}
+
 function decodeBasicAuth(value: string) {
   try {
     return atob(value);
@@ -28,12 +32,6 @@ async function safeEqual(left: string, right: string) {
 }
 
 export async function proxy(req: NextRequest) {
-  if (!username || !password) {
-    return new NextResponse("Dashboard authentication is not configured.", {
-      status: 503,
-    });
-  }
-
   const auth = req.headers.get("authorization");
 
   if (auth) {
@@ -41,9 +39,22 @@ export async function proxy(req: NextRequest) {
     if (scheme === "Basic" && encoded) {
       const decoded = decodeBasicAuth(encoded);
       const separatorIndex = decoded.indexOf(":");
+      if (separatorIndex < 0) {
+        return new NextResponse("Unauthorized", {
+          status: 401,
+          headers: {
+            "WWW-Authenticate": 'Basic realm="GitHub Studio Insights", charset="UTF-8"',
+          },
+        });
+      }
+
       const user = separatorIndex >= 0 ? decoded.slice(0, separatorIndex) : decoded;
       const pass = separatorIndex >= 0 ? decoded.slice(separatorIndex + 1) : "";
-      const isAuthorized = (await safeEqual(user ?? "", username)) && (await safeEqual(pass ?? "", password));
+      const [isUserMatch, isPasswordMatch] = await Promise.all([
+        safeEqual(user, username),
+        safeEqual(pass, password),
+      ]);
+      const isAuthorized = isUserMatch && isPasswordMatch;
 
       if (isAuthorized) {
         return NextResponse.next();
