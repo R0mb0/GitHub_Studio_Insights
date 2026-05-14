@@ -1,0 +1,75 @@
+import { NextRequest, NextResponse } from "next/server";
+
+const username = process.env.DASHBOARD_USER ?? "";
+const password = process.env.DASHBOARD_PASS ?? "";
+const encoder = new TextEncoder();
+
+if (!username || !password) {
+  throw new Error("Missing DASHBOARD_USER or DASHBOARD_PASS");
+}
+
+function decodeBasicAuth(value: string) {
+  try {
+    return atob(value);
+  } catch {
+    return "";
+  }
+}
+
+async function hashValue(value: string) {
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(value)));
+}
+
+async function safeEqual(left: string, right: string) {
+  const [leftHash, rightHash] = await Promise.all([hashValue(left), hashValue(right)]);
+  let diff = leftHash.length ^ rightHash.length;
+
+  for (let i = 0; i < Math.max(leftHash.length, rightHash.length); i += 1) {
+    diff |= (leftHash[i] ?? 0) ^ (rightHash[i] ?? 0);
+  }
+
+  return diff === 0;
+}
+
+export async function proxy(req: NextRequest) {
+  const auth = req.headers.get("authorization");
+
+  if (auth) {
+    const [scheme, encoded] = auth.split(" ");
+    if (scheme === "Basic" && encoded) {
+      const decoded = decodeBasicAuth(encoded);
+      const separatorIndex = decoded.indexOf(":");
+      if (separatorIndex < 0) {
+        return new NextResponse("Unauthorized", {
+          status: 401,
+          headers: {
+            "WWW-Authenticate": 'Basic realm="GitHub Studio Insights", charset="UTF-8"',
+          },
+        });
+      }
+
+      const user = decoded.slice(0, separatorIndex);
+      const pass = decoded.slice(separatorIndex + 1);
+      const [isUserMatch, isPasswordMatch] = await Promise.all([
+        safeEqual(user, username),
+        safeEqual(pass, password),
+      ]);
+      const isAuthorized = isUserMatch && isPasswordMatch;
+
+      if (isAuthorized) {
+        return NextResponse.next();
+      }
+    }
+  }
+
+  return new NextResponse("Unauthorized", {
+    status: 401,
+    headers: {
+      "WWW-Authenticate": 'Basic realm="GitHub Studio Insights", charset="UTF-8"',
+    },
+  });
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+};

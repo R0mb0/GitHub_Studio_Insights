@@ -16,8 +16,27 @@ type Row = {
 type SortKey = "name" | "views14" | "uniques14" | "clones14" | "stars" | "forks" | "score";
 type SortDir = "asc" | "desc";
 
+type HeaderCellProps = {
+  columnKey: SortKey;
+  label: string;
+  sortKey: SortKey;
+  sortDir: SortDir;
+  onSort: (key: SortKey) => void;
+};
+
 function shortName(input: string, max = 28) {
   return input.length > max ? `${input.slice(0, max)}…` : input;
+}
+
+function HeaderCell({ columnKey, label, sortKey, sortDir, onSort }: HeaderCellProps) {
+  return (
+    <th className="px-3 py-2 text-right font-semibold">
+      <button onClick={() => onSort(columnKey)} className="inline-flex items-center gap-1 hover:text-blue-400">
+        {label}
+        <span className="text-[10px] opacity-70">{sortKey === columnKey ? (sortDir === "asc" ? "▲" : "▼") : "·"}</span>
+      </button>
+    </th>
+  );
 }
 
 export function RepoTable({ title, rows }: { title: string; rows: Row[] }) {
@@ -50,15 +69,6 @@ export function RepoTable({ title, rows }: { title: string; rows: Row[] }) {
     return arr;
   }, [rows, sortKey, sortDir]);
 
-  const Th = ({ k, label }: { k: SortKey; label: string }) => (
-    <th className="px-3 py-2 text-right font-semibold">
-      <button onClick={() => onSort(k)} className="inline-flex items-center gap-1 hover:text-blue-400">
-        {label}
-        <span className="text-[10px] opacity-70">{sortKey === k ? (sortDir === "asc" ? "▲" : "▼") : "·"}</span>
-      </button>
-    </th>
-  );
-
   return (
     <div className="rounded-2xl border border-black/10 bg-white/70 p-4 shadow-sm dark:border-white/10 dark:bg-zinc-900/60">
       <h3 className="mb-3 text-sm font-medium text-zinc-600 dark:text-zinc-300">{title}</h3>
@@ -72,19 +82,19 @@ export function RepoTable({ title, rows }: { title: string; rows: Row[] }) {
                   <span className="text-[10px] opacity-70">{sortKey === "name" ? (sortDir === "asc" ? "▲" : "▼") : "·"}</span>
                 </button>
               </th>
-              <Th k="views14" label="Views" />
-              <Th k="uniques14" label="Unique" />
-              <Th k="clones14" label="Clones" />
-              <Th k="stars" label="Stars" />
-              <Th k="forks" label="Forks" />
-              <Th k="score" label="Score" />
+              <HeaderCell columnKey="views14" label="Views" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+              <HeaderCell columnKey="uniques14" label="Unique" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+              <HeaderCell columnKey="clones14" label="Clones" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+              <HeaderCell columnKey="stars" label="Stars" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+              <HeaderCell columnKey="forks" label="Forks" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+              <HeaderCell columnKey="score" label="Score" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
             </tr>
           </thead>
           <tbody>
             {sorted.map((r) => (
               <tr key={r.name} className="border-t border-black/5 text-zinc-700 dark:border-white/10 dark:text-zinc-300">
                 <td className="px-3 py-2 max-w-[260px] truncate" title={r.name}>
-                  <a className="hover:underline" href={r.url} target="_blank">
+                  <a className="hover:underline" href={r.url} target="_blank" rel="noopener noreferrer">
                     {shortName(r.name)}
                   </a>
                 </td>

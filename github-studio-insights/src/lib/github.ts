@@ -54,7 +54,8 @@ async function gh<T>(path: string): Promise<T> {
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`GitHub API error ${res.status} on ${path}: ${text}`);
+    console.error(`[github.ts] GitHub API error ${res.status} on ${path}: ${text}`);
+    throw new Error(`GitHub API request failed (status ${res.status})`);
   }
 
   return res.json() as Promise<T>;
