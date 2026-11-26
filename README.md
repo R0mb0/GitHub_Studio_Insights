@@ -18,6 +18,10 @@ Track your 14-day visibility (views, unique visitors, clones), discover top-perf
 
 ---
 
+[![pages-build-deployment](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/pages/pages-build-deployment)
+[![Dependabot Updates](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/dependabot/dependabot-updates)
+[![Copilot cloud agent](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/copilot-swe-agent/copilot/badge.svg)](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/copilot-swe-agent/copilot)
+[![CodeQL](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/R0mb0/GitHub_Studio_Insights/actions/workflows/github-code-scanning/codeql)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/1790e92741de49f7bdf125e7376eb2fd)](https://app.codacy.com/gh/R0mb0/GitHub_Studio_Insights/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/R0mb0/GitHub_Studio_Insights)
 [![Open Source Love svg3](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://github.com/R0mb0/GitHub_Studio_Insights)
